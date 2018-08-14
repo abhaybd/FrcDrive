@@ -35,8 +35,9 @@ public class RemoteSwerve : MonoBehaviour {
 
     private void SetWheel(WheelCollider wheel, float power, float angle)
     {
-        if(power > 0)
+        if(power != 0)
         {
+            power = Mathf.Clamp01(power);
             wheel.motorTorque = power * maxWheelTorque;
             wheel.brakeTorque = 0;
         }
@@ -46,6 +47,9 @@ public class RemoteSwerve : MonoBehaviour {
             wheel.brakeTorque = maxBrakeTorque;
         }
         wheel.steerAngle = angle;
+        Vector3 rot = wheel.transform.localEulerAngles;
+        Vector3 targetRot = new Vector3(rot.x, wheel.steerAngle, rot.z);
+        wheel.transform.localEulerAngles = targetRot;
     }
 
     IEnumerator CallRemote()
