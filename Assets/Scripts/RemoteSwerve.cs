@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 
 public class RemoteSwerve : MonoBehaviour {
 
+    const string RemoteSwerveObjName = "test.RemoteSwerve";
+
     public WheelCollider lfWheel;
     public WheelCollider rfWheel;
     public WheelCollider lrWheel;
@@ -15,9 +17,11 @@ public class RemoteSwerve : MonoBehaviour {
     public float maxBrakeTorque;
 
     private SwerveStatus status;
+    private string objectName = "remoteSwerve";
 
 	// Use this for initialization
 	void Start () {
+        Debug.Log("Instantiating remote object, success: " + RPC.Instance.InstantiateObject(RemoteSwerveObjName, objectName));
         StartCoroutine(CallRemote());
 	}
 	
@@ -53,7 +57,7 @@ public class RemoteSwerve : MonoBehaviour {
             float turn = Input.GetAxis("Turn");
             float heading = transform.eulerAngles.y;
 
-            status = (SwerveStatus) RPC.Instance.ExecuteMethod(typeof(SwerveStatus), "swerveDrive_Cartesian", x, y, turn, false, heading);
+            status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus", x, y, turn, false, heading);
             yield return new WaitForSeconds(0.05f);
         }
     }

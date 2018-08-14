@@ -27,33 +27,113 @@ public class RPC
         stream = new StreamReader(client.GetStream(), Encoding.UTF8);
     }
 
-    public object ExecuteMethod(Type returnType, string methodName, params object[] args)
+    public T ExecuteStaticMethod<T>(string className, string methodName, params object[] args)
     {
-        RPCRequest request = new RPCRequest(id++, methodName, args);
+        RPCRequest request = new RPCRequest
+        {
+            id = id++,
+            instantiate = false,
+            className = className,
+            objectName = "static",
+            methodName = methodName,
+            args = new List<object>(args)
+        };
+
         string jsonRequest = JsonConvert.SerializeObject(request);
         Debug.Log("Sending request: " + jsonRequest);
-        byte[] msg = Encoding.UTF8.GetBytes(jsonRequest + "\n");
-        stream.BaseStream.Write(msg, 0, msg.Length);
-        stream.BaseStream.Flush();
+        WriteLine(jsonRequest);
 
         string jsonResponse = stream.ReadLine();
         Debug.Log("Received response: " + jsonResponse);
-        return JsonConvert.DeserializeObject(jsonResponse, returnType);
+
+        RPCResponse<T> response = JsonConvert.DeserializeObject<RPCResponse<T>>(jsonResponse);
+        if (request.id == response.id)
+        {
+            return response.value;
+        }
+        Debug.LogWarning("Somehow the calls are out of sync! Are you using multithreading?");
+        return default(T);
+    }
+
+    public T ExecuteMethod<T>(string objectName, string methodName, params object[] args)
+    {
+        RPCRequest request = new RPCRequest
+        {
+            id = id++,
+            instantiate = false,
+            className = "",
+            objectName = objectName,
+            methodName = methodName,
+            args = new List<object>(args)
+        };
+
+        string jsonRequest = JsonConvert.SerializeObject(request);
+        Debug.Log("Sending request: " + jsonRequest);
+        WriteLine(jsonRequest);
+
+        string jsonResponse = stream.ReadLine();
+        Debug.Log("Received response: " + jsonResponse);
+
+        RPCResponse<T> response = JsonConvert.DeserializeObject<RPCResponse<T>>(jsonResponse);
+        if(request.id == response.id)
+        {
+            return response.value;
+        }
+        Debug.LogWarning("Somehow the calls are out of sync! Are you using multithreading?");
+        return default(T);
+    }
+
+    public bool InstantiateObject(string className, string objectName, params object[] args)
+    {
+        RPCRequest request = new RPCRequest
+        {
+            id = id++,
+            instantiate = true,
+            className = className,
+            objectName = objectName,
+            methodName = "",
+            args = new List<object>(args)
+        };
+
+        string jsonRequest = JsonConvert.SerializeObject(request);
+        Debug.Log("Sending request: " + jsonRequest);
+        WriteLine(jsonRequest);
+
+        string jsonResponse = stream.ReadLine();
+        Debug.Log("Received response: " + jsonResponse);
+
+        RPCResponse<bool> response = JsonConvert.DeserializeObject<RPCResponse<bool>>(jsonResponse);
+        if (request.id == response.id)
+        {
+            return response.value;
+        }
+        Debug.LogWarning("Somehow the calls are out of sync! Are you using multithreading?");
+        return false;
+    }
+
+    private void WriteLine(string message)
+    {
+        byte[] msg = Encoding.UTF8.GetBytes(message + "\n");
+        stream.BaseStream.Write(msg, 0, msg.Length);
+        stream.BaseStream.Flush();
     }
 
     [Serializable]
     private class RPCRequest
     {
         public long id;
+        public bool instantiate;
+        public string className;
+        public string objectName;
         public string methodName;
         public List<object> args;
+    }
 
-        public RPCRequest(long id, string methodName, params object[] args)
-        {
-            this.id = id;
-            this.methodName = methodName;
-            this.args = new List<object>(args);
-        }
+    [Serializable]
+    private class RPCResponse<T>
+    {
+        public long id;
+        public T value;
     }
 
     private class Nested
