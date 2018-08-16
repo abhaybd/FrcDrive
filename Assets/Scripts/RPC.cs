@@ -27,7 +27,12 @@ public class RPC
         stream = new StreamReader(client.GetStream(), Encoding.UTF8);
     }
 
-    public T ExecuteStaticMethod<T>(string className, string methodName, params object[] args)
+    public T ExecuteStaticMethod<T>(string className, string methodName)
+    {
+        return ExecuteStaticMethod<T>(className, methodName, new string[] { }, new object[] { });
+    }
+
+    public T ExecuteStaticMethod<T>(string className, string methodName, string[] argClassNames, object[] args)
     {
         RPCRequest request = new RPCRequest
         {
@@ -36,6 +41,7 @@ public class RPC
             className = className,
             objectName = "static",
             methodName = methodName,
+            argClassNames = new List<string>(argClassNames),
             args = new List<object>(args)
         };
 
@@ -55,7 +61,12 @@ public class RPC
         return default(T);
     }
 
-    public T ExecuteMethod<T>(string objectName, string methodName, params object[] args)
+    public T ExecuteMethod<T>(string objectName, string methodName)
+    {
+        return ExecuteMethod<T>(objectName, methodName, new string[] { }, new object[] { });
+    }
+
+    public T ExecuteMethod<T>(string objectName, string methodName, string[] argClassNames, object[] args)
     {
         RPCRequest request = new RPCRequest
         {
@@ -64,6 +75,7 @@ public class RPC
             className = "",
             objectName = objectName,
             methodName = methodName,
+            argClassNames = new List<string>(argClassNames),
             args = new List<object>(args)
         };
 
@@ -82,8 +94,13 @@ public class RPC
         Debug.LogWarning("Somehow the calls are out of sync! Are you using multithreading?");
         return default(T);
     }
+    
+    public bool InstantiateObject(string className, string objectName)
+    {
+        return InstantiateObject(className, objectName, new string[] { }, new object[] { });
+    }
 
-    public bool InstantiateObject(string className, string objectName, params object[] args)
+    public bool InstantiateObject(string className, string objectName, string[] argClassNames, object[] args)
     {
         RPCRequest request = new RPCRequest
         {
@@ -92,6 +109,7 @@ public class RPC
             className = className,
             objectName = objectName,
             methodName = "",
+            argClassNames = new List<string>(argClassNames),
             args = new List<object>(args)
         };
 
@@ -126,6 +144,7 @@ public class RPC
         public string className;
         public string objectName;
         public string methodName;
+        public List<string> argClassNames;
         public List<object> args;
     }
 

@@ -11,22 +11,19 @@ public class JsonTest : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        RPCRequest request = new RPCRequest(2, "hello", 3, 4, true, 3);
-        Debug.Log(JsonConvert.SerializeObject(request));
+        TestObj obj = new TestObj
+        {
+            foo = 32,
+            bar = "hello"
+        };
+        Debug.Log(JsonConvert.SerializeObject(obj));
+        RPC.Instance.ExecuteStaticMethod<object>("test.Test","printObj", new string[] { "test.Test" }, new object[] { obj });
 	}
 
     [Serializable]
-    private class RPCRequest
+    private class TestObj
     {
-        public long id;
-        public string methodName;
-        public List<object> args;
-
-        public RPCRequest(long id, string methodName, params object[] args)
-        {
-            this.id = id;
-            this.methodName = methodName;
-            this.args = new List<object>(args);
-        }
+        public long foo;
+        public String bar;
     }
 }
