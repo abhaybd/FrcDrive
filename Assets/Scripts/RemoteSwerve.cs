@@ -21,7 +21,7 @@ public class RemoteSwerve : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        Debug.Log("Instantiating remote object, success: " + RPC.Instance.InstantiateObject(RemoteSwerveObjName, objectName));
+        Debug.Log("Instantiating remote object, success: " + (RPC.Instance.InstantiateObject<object>(RemoteSwerveObjName, objectName) != null));
         StartCoroutine(CallRemote());
 	}
 	

@@ -95,12 +95,12 @@ public class RPC
         return default(T);
     }
     
-    public bool InstantiateObject(string className, string objectName)
+    public T InstantiateObject<T>(string className, string objectName)
     {
-        return InstantiateObject(className, objectName, new string[] { }, new object[] { });
+        return InstantiateObject<T>(className, objectName, new string[] { }, new object[] { });
     }
 
-    public bool InstantiateObject(string className, string objectName, string[] argClassNames, object[] args)
+    public T InstantiateObject<T>(string className, string objectName, string[] argClassNames, object[] args)
     {
         RPCRequest request = new RPCRequest
         {
@@ -120,13 +120,13 @@ public class RPC
         string jsonResponse = stream.ReadLine();
         Debug.Log("Received response: " + jsonResponse);
 
-        RPCResponse<bool> response = JsonConvert.DeserializeObject<RPCResponse<bool>>(jsonResponse);
+        RPCResponse<T> response = JsonConvert.DeserializeObject<RPCResponse<T>>(jsonResponse);
         if (request.id == response.id)
         {
             return response.value;
         }
         Debug.LogWarning("Somehow the calls are out of sync! Are you using multithreading?");
-        return false;
+        return default(T);
     }
 
     private void WriteLine(string message)
