@@ -20,13 +20,15 @@ public class RemoteSwerve : MonoBehaviour {
     private string objectName = "remoteSwerve";
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+    {
         Debug.Log("Instantiating remote object, success: " + (RPC.Instance.InstantiateObject<object>(RemoteSwerveObjName, objectName) != null));
         StartCoroutine(CallRemote());
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         SetWheel(lfWheel, status.lfPower, status.lfAngle);
         SetWheel(rfWheel, status.rfPower, status.rfAngle);
         SetWheel(lrWheel, status.lrPower, status.lrAngle);

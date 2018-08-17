@@ -10,9 +10,17 @@ using Newtonsoft.Json;
 
 public class RPC
 {
+    private static RPC instance = null;
     public static RPC Instance
     {
-        get { return Nested.instance; }
+        get
+        {
+            if(instance == null)
+            {
+                instance = new RPC();
+            }
+            return instance;
+        }
     }
 
     private TcpClient client;
@@ -34,31 +42,7 @@ public class RPC
 
     public T ExecuteStaticMethod<T>(string className, string methodName, string[] argClassNames, object[] args)
     {
-        RPCRequest request = new RPCRequest
-        {
-            id = id++,
-            instantiate = false,
-            className = className,
-            objectName = "static",
-            methodName = methodName,
-            argClassNames = new List<string>(argClassNames),
-            args = new List<object>(args)
-        };
-
-        string jsonRequest = JsonConvert.SerializeObject(request);
-        Debug.Log("Sending request: " + jsonRequest);
-        WriteLine(jsonRequest);
-
-        string jsonResponse = stream.ReadLine();
-        Debug.Log("Received response: " + jsonResponse);
-
-        RPCResponse<T> response = JsonConvert.DeserializeObject<RPCResponse<T>>(jsonResponse);
-        if (request.id == response.id)
-        {
-            return response.value;
-        }
-        Debug.LogWarning("Somehow the calls are out of sync! Are you using multithreading?");
-        return default(T);
+        return SendRPCRequest<T>(false, className, "", methodName, argClassNames, args);
     }
 
     public T ExecuteMethod<T>(string objectName, string methodName)
@@ -68,31 +52,7 @@ public class RPC
 
     public T ExecuteMethod<T>(string objectName, string methodName, string[] argClassNames, object[] args)
     {
-        RPCRequest request = new RPCRequest
-        {
-            id = id++,
-            instantiate = false,
-            className = "",
-            objectName = objectName,
-            methodName = methodName,
-            argClassNames = new List<string>(argClassNames),
-            args = new List<object>(args)
-        };
-
-        string jsonRequest = JsonConvert.SerializeObject(request);
-        Debug.Log("Sending request: " + jsonRequest);
-        WriteLine(jsonRequest);
-
-        string jsonResponse = stream.ReadLine();
-        Debug.Log("Received response: " + jsonResponse);
-
-        RPCResponse<T> response = JsonConvert.DeserializeObject<RPCResponse<T>>(jsonResponse);
-        if(request.id == response.id)
-        {
-            return response.value;
-        }
-        Debug.LogWarning("Somehow the calls are out of sync! Are you using multithreading?");
-        return default(T);
+        return SendRPCRequest<T>(false, "", objectName, methodName, argClassNames, args);
     }
     
     public T InstantiateObject<T>(string className, string objectName)
@@ -102,13 +62,18 @@ public class RPC
 
     public T InstantiateObject<T>(string className, string objectName, string[] argClassNames, object[] args)
     {
+        return SendRPCRequest<T>(true, className, objectName, "", argClassNames, args);
+    }
+
+    private T SendRPCRequest<T>(bool instantiate, string className, string objectName, string methodName, string[] argClassNames, object[] args)
+    {
         RPCRequest request = new RPCRequest
         {
             id = id++,
-            instantiate = true,
+            instantiate = instantiate,
             className = className,
             objectName = objectName,
-            methodName = "",
+            methodName = methodName,
             argClassNames = new List<string>(argClassNames),
             args = new List<object>(args)
         };
@@ -153,15 +118,5 @@ public class RPC
     {
         public long id;
         public T value;
-    }
-
-    private class Nested
-    {
-        static Nested()
-        {
-
-        }
-
-        internal static readonly RPC instance = new RPC();
     }
 }
