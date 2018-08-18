@@ -629,7 +629,7 @@ MonoBehaviour:
   lrWheel: {fileID: 1917906336}
   rrWheel: {fileID: 2007736311}
   maxWheelTorque: 50
-  maxBrakeTorque: 100
+  maxBrakeTorque: 50
 --- !u!1 &1917906332
 GameObject:
   m_ObjectHideFlags: 0
