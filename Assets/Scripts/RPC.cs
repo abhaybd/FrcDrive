@@ -85,13 +85,20 @@ public class RPC
         string jsonResponse = stream.ReadLine();
         Debug.Log("Received response: " + jsonResponse);
 
+        RPCResponse<object> tempResponse = JsonConvert.DeserializeObject<RPCResponse<object>>(jsonResponse);
+
+        if(tempResponse.isException)
+        {
+            RPCResponse<string> exceptionResponse = JsonConvert.DeserializeObject<RPCResponse<string>>(jsonResponse);
+            throw new Exception(exceptionResponse.value);
+        }
+
         RPCResponse<T> response = JsonConvert.DeserializeObject<RPCResponse<T>>(jsonResponse);
         if (request.id == response.id)
         {
             return response.value;
         }
-        Debug.LogWarning("Somehow the calls are out of sync! Are you using multithreading?");
-        return default(T);
+        throw new RPCException("Somehow the calls are out of sync! Are you using multithreading?");
     }
 
     private void WriteLine(string message)
@@ -99,6 +106,11 @@ public class RPC
         byte[] msg = Encoding.UTF8.GetBytes(message + "\n");
         stream.BaseStream.Write(msg, 0, msg.Length);
         stream.BaseStream.Flush();
+    }
+
+    private class RPCException : Exception
+    {
+        public RPCException(string message) : base(message) {}
     }
 
     [Serializable]
@@ -117,6 +129,7 @@ public class RPC
     private class RPCResponse<T>
     {
         public long id;
+        public bool isException;
         public T value;
     }
 }
