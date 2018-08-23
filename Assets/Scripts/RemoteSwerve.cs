@@ -64,8 +64,8 @@ public class RemoteSwerve : MonoBehaviour {
             float heading = transform.eulerAngles.y;
 
             status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus",
-                new string[] { "java.lang.Double",  "java.lang.Double", "java.lang.Double", "java.lang.Boolean", "java.lang.Double" },
-                new object[] { x, y, turn, false, heading });
+                new string[] { "java.lang.Double",  "java.lang.Double", "java.lang.Double", "java.lang.Double" },
+                new object[] { x, y, turn, heading });
             yield return new WaitForSeconds(0.05f);
         }
     }
