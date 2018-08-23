@@ -16,8 +16,8 @@ public class RemoteSwerve : MonoBehaviour {
     public float maxWheelTorque;
     public float maxBrakeTorque;
 
-    private SwerveStatus status;
     private string objectName = "remoteSwerve";
+    private SwerveStatus status = new SwerveStatus();
 
 	// Use this for initialization
 	void Start ()
