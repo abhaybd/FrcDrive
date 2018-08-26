@@ -22,7 +22,12 @@ public class RemoteSwerve : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
     {
-        Debug.Log("Instantiating remote object, success: " + (RPC.Instance.InstantiateObject<object>(RemoteSwerveObjName, objectName) != null));
+        float width = transform.localScale.x;
+        float length = transform.localScale.z;
+        object obj = RPC.Instance.InstantiateObject<object>(RemoteSwerveObjName, objectName,
+            new string[] { "java.lang.Double", "java.lang.Double" },
+            new object[] { width, length });
+        Debug.Log("Instantiating remote object, success: " + (obj != null));
         StartCoroutine(CallRemote());
 	}
 	
@@ -39,7 +44,7 @@ public class RemoteSwerve : MonoBehaviour {
     {
         if(power != 0)
         {
-            power = Mathf.Clamp01(power);
+            power = Mathf.Clamp(power, -1, 1);
             wheel.motorTorque = power * maxWheelTorque;
             wheel.brakeTorque = 0;
         }
