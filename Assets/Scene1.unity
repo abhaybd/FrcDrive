@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 108250375}
   - component: {fileID: 108250374}
   - component: {fileID: 108250376}
+  - component: {fileID: 108250377}
   m_Layer: 0
   m_Name: LFWheel
   m_TagString: Untagged
@@ -302,6 +303,17 @@ WheelCollider:
     m_AsymptoteValue: 0.75
     m_Stiffness: 1
   m_Enabled: 1
+--- !u!114 &108250377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 108250372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23384fdd5166d74f988f8b2ece3d5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &463738218
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,6 +410,7 @@ GameObject:
   - component: {fileID: 491284057}
   - component: {fileID: 491284056}
   - component: {fileID: 491284058}
+  - component: {fileID: 491284059}
   m_Layer: 0
   m_Name: RFWheel
   m_TagString: Untagged
@@ -489,6 +502,17 @@ WheelCollider:
     m_AsymptoteValue: 0.75
     m_Stiffness: 1
   m_Enabled: 1
+--- !u!114 &491284059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 491284054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23384fdd5166d74f988f8b2ece3d5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1516585016
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,7 +663,7 @@ MonoBehaviour:
   rrWheel: {fileID: 2007736311}
   maxWheelSpeed: 270
   maxMotorSpeed: 18700
-  maxBrakeTorque: 50
+  maxBrakeTorque: 10
   Kv: 1570.05
   Kt: 0.0053
   R: 0.0896
@@ -665,6 +689,7 @@ GameObject:
   - component: {fileID: 1917906335}
   - component: {fileID: 1917906334}
   - component: {fileID: 1917906336}
+  - component: {fileID: 1917906337}
   m_Layer: 0
   m_Name: LRWheel
   m_TagString: Untagged
@@ -756,6 +781,17 @@ WheelCollider:
     m_AsymptoteValue: 0.75
     m_Stiffness: 1
   m_Enabled: 1
+--- !u!114 &1917906337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1917906332}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23384fdd5166d74f988f8b2ece3d5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1970270598
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,6 +835,7 @@ GameObject:
   - component: {fileID: 2007736313}
   - component: {fileID: 2007736312}
   - component: {fileID: 2007736311}
+  - component: {fileID: 2007736315}
   m_Layer: 0
   m_Name: RRWheel
   m_TagString: Untagged
@@ -890,6 +927,17 @@ Transform:
   m_Father: {fileID: 1970270599}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!114 &2007736315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2007736310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e23384fdd5166d74f988f8b2ece3d5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2097232605
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,10 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Newtonsoft.Json;
 
-public class RemoteSwerve : MonoBehaviour {
+public class RemoteSwerve : MonoBehaviour
+{
 
     const string RemoteSwerveObjName = "test.RemoteSwerve";
 
@@ -20,13 +19,23 @@ public class RemoteSwerve : MonoBehaviour {
     public float Kt = 0.00530f; // Nm/A
     public float R = 0.0896f; // ohms
 
+    private Encoder lfEncoder;
+    private Encoder rfEncoder;
+    private Encoder rrEncoder;
+    private Encoder lrEncoder;
+
     private string objectName = "remoteSwerve";
     private SwerveStatus status = new SwerveStatus();
     private float gearing;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
+        lfEncoder = lfWheel.GetComponent<Encoder>();
+        rfEncoder = rfWheel.GetComponent<Encoder>();
+        rrEncoder = rrWheel.GetComponent<Encoder>();
+        lrEncoder = lrWheel.GetComponent<Encoder>();
+
         gearing = maxWheelSpeed / maxMotorSpeed; // output over input
         Debug.Log("Gearing: " + gearing);
         float width = transform.localScale.x;
@@ -36,7 +45,7 @@ public class RemoteSwerve : MonoBehaviour {
             new object[] { width, length });
         Debug.Log("Instantiating remote object, success: " + (obj != null));
         StartCoroutine(CallRemote());
-	}
+    }
 
     private float GetTorque(WheelCollider wheel, float volts)
     {
@@ -47,22 +56,23 @@ public class RemoteSwerve : MonoBehaviour {
         float back_emf = Math.Min(rpm / Kv, volts_abs);
         float torque_abs = (volts_abs - back_emf) * Kt / R;
         float torque = Math.Sign(volts) * torque_abs / gearing;
-        Debug.LogFormat("Volts: {0}, rpm: {1}, out torque: {2}", volts, wheel.rpm, torque);
         return torque;
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         SetWheel(lfWheel, status.lfPower, status.lfAngle);
         SetWheel(rfWheel, status.rfPower, status.rfAngle);
         SetWheel(lrWheel, status.lrPower, status.lrAngle);
         SetWheel(rrWheel, status.rrPower, status.rrAngle);
+        
+        Debug.Log(lfEncoder.GetPosition());
     }
 
     private void SetWheel(WheelCollider wheel, float power, float angle)
     {
-        if(power != 0)
+        if (power != 0)
         {
             float volts = power * 12f;
             wheel.motorTorque = GetTorque(wheel, volts);
@@ -89,7 +99,7 @@ public class RemoteSwerve : MonoBehaviour {
             float heading = transform.eulerAngles.y;
 
             status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus",
-                new string[] { "java.lang.Double",  "java.lang.Double", "java.lang.Double", "java.lang.Double" },
+                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
                 new object[] { x, y, turn, heading });
             yield return new WaitForSeconds(0.005f);
         }
