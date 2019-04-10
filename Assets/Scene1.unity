@@ -287,7 +287,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 50
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
@@ -474,7 +474,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 50
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
@@ -601,7 +601,7 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 100
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -637,8 +637,12 @@ MonoBehaviour:
   rfWheel: {fileID: 491284058}
   lrWheel: {fileID: 1917906336}
   rrWheel: {fileID: 2007736311}
-  maxWheelTorque: 50
+  maxWheelSpeed: 270
+  maxMotorSpeed: 18700
   maxBrakeTorque: 50
+  Kv: 1570.05
+  Kt: 0.0053
+  R: 0.0896
 --- !u!114 &1788497332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -737,7 +741,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 50
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
@@ -816,7 +820,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 50
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4

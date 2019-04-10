@@ -79,11 +79,11 @@ public class RPC
         };
 
         string jsonRequest = JsonConvert.SerializeObject(request);
-        Debug.Log("Sending request: " + jsonRequest);
+        //Debug.Log("Sending request: " + jsonRequest);
         WriteLine(jsonRequest);
 
         string jsonResponse = stream.ReadLine();
-        Debug.Log("Received response: " + jsonResponse);
+        //Debug.Log("Received response: " + jsonResponse);
 
         RPCResponse<object> tempResponse = JsonConvert.DeserializeObject<RPCResponse<object>>(jsonResponse);
 
