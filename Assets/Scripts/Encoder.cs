@@ -7,7 +7,7 @@ public class Encoder : MonoBehaviour
     private float dist;
     private WheelCollider wheel;
 
-    void Start()
+    void Awake()
     {
         dist = 0f;
         wheel = GetComponent<WheelCollider>();
@@ -16,7 +16,7 @@ public class Encoder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dist += GetVelocity() * Time.deltaTime * 2f * (float)Math.PI * wheel.radius * transform.localScale.y;
+        dist += GetTangentialVelocity() * Time.deltaTime;
     }
 
     public void Reset()
@@ -29,7 +29,12 @@ public class Encoder : MonoBehaviour
         return dist;
     }
 
-    public float GetVelocity()
+    public float GetTangentialVelocity()
+    {
+        return GetRotationalVelocity() * 2f * (float)Math.PI * wheel.radius * transform.localScale.y;
+    }
+
+    public float GetRotationalVelocity()
     {
         return wheel.rpm / 60f;
     }

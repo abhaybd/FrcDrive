@@ -66,8 +66,8 @@ public class RemoteSwerve : MonoBehaviour
         SetWheel(rfWheel, status.rfPower, status.rfAngle);
         SetWheel(lrWheel, status.lrPower, status.lrAngle);
         SetWheel(rrWheel, status.rrPower, status.rrAngle);
-        
-        Debug.Log(lfEncoder.GetPosition());
+
+        Debug.LogFormat("X={0},Y={1},heading={2}", status.x, status.y, status.heading);
     }
 
     private void SetWheel(WheelCollider wheel, float power, float angle)
@@ -99,9 +99,9 @@ public class RemoteSwerve : MonoBehaviour
             float heading = transform.eulerAngles.y;
 
             status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus",
-                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
-                new object[] { x, y, turn, heading });
-            yield return new WaitForSeconds(0.005f);
+                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
+                new object[] { x, y, turn, heading, lfEncoder.GetTangentialVelocity(), rfEncoder.GetTangentialVelocity(), lrEncoder.GetTangentialVelocity(), rrEncoder.GetTangentialVelocity() });
+            yield return new WaitForSeconds(0.01f);
         }
     }
 
@@ -112,5 +112,6 @@ public class RemoteSwerve : MonoBehaviour
         public float rfPower, rfAngle;
         public float lrPower, lrAngle;
         public float rrPower, rrAngle;
+        public float x, y, heading;
     }
 }
