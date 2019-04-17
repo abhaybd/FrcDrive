@@ -5,7 +5,7 @@ using System;
 public class RemoteSwerve : MonoBehaviour
 {
 
-    const string RemoteSwerveObjName = "test.RemoteSwerve";
+    const string RemoteSwerveObjName = "drivesim.RemoteSwerve";
 
     public WheelCollider lfWheel;
     public WheelCollider rfWheel;
@@ -67,7 +67,7 @@ public class RemoteSwerve : MonoBehaviour
         SetWheel(lrWheel, status.lrPower, status.lrAngle);
         SetWheel(rrWheel, status.rrPower, status.rrAngle);
 
-        Debug.LogFormat("X={0},Y={1},heading={2}", status.x, status.y, status.heading);
+        //Debug.LogFormat("X={0},Y={1},heading={2}", status.x, status.y, status.heading);
     }
 
     private void SetWheel(WheelCollider wheel, float power, float angle)

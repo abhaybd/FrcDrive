@@ -35,6 +35,16 @@ public class RPC
         stream = new StreamReader(client.GetStream(), Encoding.UTF8);
     }
 
+    public T ExecuteMethodOnStaticObject<T>(string className, string objectName, string methodName)
+    {
+        return ExecuteMethodOnStaticObject<T>(className, objectName, methodName, new string[] { }, new object[] { });
+    }
+
+    public T ExecuteMethodOnStaticObject<T>(string className, string objectName, string methodName, string[] argClassNames, object[] args)
+    {
+        return SendRPCRequest<T>(false, className, objectName, methodName, argClassNames, args);
+    }
+
     public T ExecuteStaticMethod<T>(string className, string methodName)
     {
         return ExecuteStaticMethod<T>(className, methodName, new string[] { }, new object[] { });
@@ -67,6 +77,11 @@ public class RPC
 
     private T SendRPCRequest<T>(bool instantiate, string className, string objectName, string methodName, string[] argClassNames, object[] args)
     {
+        if (argClassNames.Length != args.Length)
+        {
+            throw new Exception("argClassNames and args must have same length!");
+        }
+
         RPCRequest request = new RPCRequest
         {
             id = id++,
@@ -79,11 +94,11 @@ public class RPC
         };
 
         string jsonRequest = JsonConvert.SerializeObject(request);
-        //Debug.Log("Sending request: " + jsonRequest);
+        Debug.Log("Sending request: " + jsonRequest);
         WriteLine(jsonRequest);
 
         string jsonResponse = stream.ReadLine();
-        //Debug.Log("Received response: " + jsonResponse);
+        Debug.Log("Received response: " + jsonResponse);
 
         RPCResponse<object> tempResponse = JsonConvert.DeserializeObject<RPCResponse<object>>(jsonResponse);
 
