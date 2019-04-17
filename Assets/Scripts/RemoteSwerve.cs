@@ -6,6 +6,7 @@ public class RemoteSwerve : MonoBehaviour
 {
 
     const string RemoteSwerveObjName = "drivesim.RemoteSwerve";
+    const string GyroObjName = "drivesim.MockGyro";
 
     public WheelCollider lfWheel;
     public WheelCollider rfWheel;
@@ -25,6 +26,7 @@ public class RemoteSwerve : MonoBehaviour
     private Encoder lrEncoder;
 
     private string objectName = "remoteSwerve";
+    private string remoteGyroName = "gyro";
     private SwerveStatus status = new SwerveStatus();
     private float gearing;
 
@@ -40,9 +42,10 @@ public class RemoteSwerve : MonoBehaviour
         Debug.Log("Gearing: " + gearing);
         float width = transform.localScale.x;
         float length = transform.localScale.z;
+        RPC.Instance.InstantiateObject<object>(GyroObjName, remoteGyroName, new string[] { "java.lang.String" }, new object[] { "MockGyro" });
         object obj = RPC.Instance.InstantiateObject<object>(RemoteSwerveObjName, objectName,
-            new string[] { "java.lang.Double", "java.lang.Double" },
-            new object[] { width, length });
+            new string[] { "java.lang.Double", "java.lang.Double", "REMOTE:trclib.TrcGyro" },
+            new object[] { width, length, remoteGyroName });
         Debug.Log("Instantiating remote object, success: " + (obj != null));
         StartCoroutine(CallRemote());
     }
@@ -97,6 +100,8 @@ public class RemoteSwerve : MonoBehaviour
             float y = Input.GetAxis("Vertical");
             float turn = Input.GetAxis("Turn");
             float heading = transform.eulerAngles.y;
+
+            RPC.Instance.ExecuteMethod<object>(remoteGyroName, "setHeading", new string[] { "java.lang.Double" }, new object[] { heading });
 
             status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus",
                 new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
