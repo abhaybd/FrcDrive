@@ -5,6 +5,7 @@ using UnityEngine;
 public class Encoder : MonoBehaviour
 {
     private float dist;
+    private float? prevVel = null;
     private WheelCollider wheel;
 
     void Awake()
@@ -16,7 +17,9 @@ public class Encoder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        dist += GetTangentialVelocity() * Time.deltaTime;
+        float vel = GetTangentialVelocity();
+        dist += Time.deltaTime * (vel + (prevVel ?? vel)) / 2f;
+        prevVel = vel;
     }
 
     public void Reset()

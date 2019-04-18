@@ -35,6 +35,12 @@ public class RPC
         stream = new StreamReader(client.GetStream(), Encoding.UTF8);
     }
 
+    public void Close()
+    {
+        stream.Close();
+        client.Close();
+    }
+
     public T ExecuteMethodOnStaticObject<T>(string className, string objectName, string methodName)
     {
         return ExecuteMethodOnStaticObject<T>(className, objectName, methodName, new string[] { }, new object[] { });
@@ -94,11 +100,11 @@ public class RPC
         };
 
         string jsonRequest = JsonConvert.SerializeObject(request);
-        Debug.Log("Sending request: " + jsonRequest);
+        //Debug.Log("Sending request: " + jsonRequest);
         WriteLine(jsonRequest);
 
         string jsonResponse = stream.ReadLine();
-        Debug.Log("Received response: " + jsonResponse);
+        //Debug.Log("Received response: " + jsonResponse);
 
         RPCResponse<object> tempResponse = JsonConvert.DeserializeObject<RPCResponse<object>>(jsonResponse);
 

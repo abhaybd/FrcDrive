@@ -40,8 +40,8 @@ public class RemoteSwerve : MonoBehaviour
 
         gearing = maxWheelSpeed / maxMotorSpeed; // output over input
         Debug.Log("Gearing: " + gearing);
-        float width = transform.localScale.x;
-        float length = transform.localScale.z;
+        float width = (rfWheel.transform.position - lfWheel.transform.position).magnitude;
+        float length = (rfWheel.transform.position - rrWheel.transform.position).magnitude;
         RPC.Instance.InstantiateObject<object>(GyroObjName, remoteGyroName, new string[] { "java.lang.String" }, new object[] { "MockGyro" });
         object obj = RPC.Instance.InstantiateObject<object>(RemoteSwerveObjName, objectName,
             new string[] { "java.lang.Double", "java.lang.Double", "REMOTE:trclib.TrcGyro" },
@@ -71,6 +71,11 @@ public class RemoteSwerve : MonoBehaviour
         SetWheel(rrWheel, status.rrPower, status.rrAngle);
 
         //Debug.LogFormat("X={0},Y={1},heading={2}", status.x, status.y, status.heading);
+    }
+
+    void OnDestroy()
+    {
+        RPC.Instance.Close();
     }
 
     private void SetWheel(WheelCollider wheel, float power, float angle)
@@ -104,8 +109,8 @@ public class RemoteSwerve : MonoBehaviour
             RPC.Instance.ExecuteMethod<object>(remoteGyroName, "setHeading", new string[] { "java.lang.Double" }, new object[] { heading });
 
             status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus",
-                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
-                new object[] { x, y, turn, heading, lfEncoder.GetTangentialVelocity(), rfEncoder.GetTangentialVelocity(), lrEncoder.GetTangentialVelocity(), rrEncoder.GetTangentialVelocity() });
+                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
+                new object[] { x, y, turn, lfEncoder.GetTangentialVelocity(), rfEncoder.GetTangentialVelocity(), lrEncoder.GetTangentialVelocity(), rrEncoder.GetTangentialVelocity() });
             yield return new WaitForSeconds(0.01f);
         }
     }
