@@ -289,7 +289,7 @@ WheelCollider:
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
   m_Mass: 50
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 1.5
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -488,7 +488,7 @@ WheelCollider:
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
   m_Mass: 50
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 1.5
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -609,6 +609,7 @@ GameObject:
   - component: {fileID: 1788497329}
   - component: {fileID: 1788497331}
   - component: {fileID: 1788497332}
+  - component: {fileID: 1788497333}
   m_Layer: 0
   m_Name: RobotRoot
   m_TagString: Untagged
@@ -652,7 +653,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1788497328}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 549d28d8b815deb439eaf2333e0d3985, type: 3}
   m_Name: 
@@ -675,9 +676,40 @@ MonoBehaviour:
   m_GameObject: {fileID: 1788497328}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64c4674a7a54f6f4bbaf7a7d60581b13, type: 3}
+  m_Script: {fileID: 11500000, guid: dcc888810b61708449e83b3b8b47a692, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lfWheel: {fileID: 108250376}
+  rfWheel: {fileID: 491284058}
+  lrWheel: {fileID: 1917906336}
+  rrWheel: {fileID: 2007736311}
+  maxWheelSpeed: 270
+  maxMotorSpeed: 18700
+  maxBrakeTorque: 10
+  Kv: 1570.05
+  Kt: 0.0053
+  R: 0.0896
+--- !u!114 &1788497333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1788497328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8a6debd5080b6a42a9b688b3a664572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lfWheel: {fileID: 108250376}
+  rfWheel: {fileID: 491284058}
+  lrWheel: {fileID: 1917906336}
+  rrWheel: {fileID: 2007736311}
+  maxWheelSpeed: 270
+  maxMotorSpeed: 18700
+  maxBrakeTorque: 80
+  Kv: 1570.05
+  Kt: 0.0053
+  R: 0.0896
 --- !u!1 &1917906332
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,7 +799,7 @@ WheelCollider:
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
   m_Mass: 50
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 1.5
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -858,7 +890,7 @@ WheelCollider:
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
   m_Mass: 50
-  m_WheelDampingRate: 0.25
+  m_WheelDampingRate: 1.5
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1

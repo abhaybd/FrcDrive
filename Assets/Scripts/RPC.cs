@@ -104,7 +104,7 @@ public class RPC
         WriteLine(jsonRequest);
 
         string jsonResponse = stream.ReadLine();
-        //Debug.Log("Received response: " + jsonResponse);
+        Debug.Log("Received response: " + jsonResponse);
 
         RPCResponse<object> tempResponse = JsonConvert.DeserializeObject<RPCResponse<object>>(jsonResponse);
 
