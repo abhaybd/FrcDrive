@@ -19,6 +19,7 @@ public class RemotePP : MonoBehaviour {
     public float R = 0.0896f; // ohms
 
     private string objectName = "remotePP";
+    private Rigidbody rb;
     private SwerveStatus status = new SwerveStatus();
     private float gearing;
     private bool started = false;
@@ -27,10 +28,11 @@ public class RemotePP : MonoBehaviour {
     void Start()
     {
         gearing = maxWheelSpeed / maxMotorSpeed; // output over input
-        float topSpeed = (maxWheelSpeed / 60f) * 2f * (float)Math.PI * lfWheel.radius * lfWheel.transform.localScale.y;
+        float topSpeed = 2.7f; //(maxWheelSpeed / 60f) * 2f * (float)Math.PI * lfWheel.radius * lfWheel.transform.localScale.y;
         Debug.Log("Gearing: " + gearing + ", TopSpeed: " + topSpeed);
         float width = (rfWheel.transform.position - lfWheel.transform.position).magnitude;
         float length = (rfWheel.transform.position - rrWheel.transform.position).magnitude;
+        rb = GetComponent<Rigidbody>();
         object obj = RPC.Instance.InstantiateObject<object>(RemotePPClassName, objectName,
             new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double" },
             new object[] { width, length, topSpeed });
@@ -53,6 +55,7 @@ public class RemotePP : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(rb.velocity);
         SetWheel(lfWheel, status.lfPower, status.lfAngle);
         SetWheel(rfWheel, status.rfPower, status.rfAngle);
         SetWheel(lrWheel, status.lrPower, status.lrAngle);
@@ -98,8 +101,8 @@ public class RemotePP : MonoBehaviour {
             float heading = transform.eulerAngles.y;
 
             status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus",
-                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double" },
-                new object[] { x, y, heading });
+                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
+                new object[] { x, y, heading, rb.velocity.x, rb.velocity.z });
             yield return new WaitForSeconds(0.05f);
         }
     }
