@@ -12,11 +12,9 @@ public class RemotePP : MonoBehaviour {
     public WheelCollider rrWheel;
 
     public float maxWheelSpeed;
-    public float maxMotorSpeed = 18700f; // rev/min
     public float maxBrakeTorque;
-    public float Kv = 1570.05f; // rev/volt-min
-    public float Kt = 0.00530f; // Nm/A
-    public float R = 0.0896f; // ohms
+
+    private DCMotor motor = new Neo();
 
     private string objectName = "remotePP";
     private Rigidbody rb;
@@ -27,8 +25,8 @@ public class RemotePP : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        gearing = maxWheelSpeed / maxMotorSpeed; // output over input
-        float topSpeed = 2.7f; //(maxWheelSpeed / 60f) * 2f * (float)Math.PI * lfWheel.radius * lfWheel.transform.localScale.y;
+        gearing = maxWheelSpeed / motor.FreeSpeed; // output over input
+        float topSpeed = (maxWheelSpeed / 60f) * 2f * (float)Math.PI * lfWheel.radius * lfWheel.transform.localScale.y;
         Debug.Log("Gearing: " + gearing + ", TopSpeed: " + topSpeed);
         float width = (rfWheel.transform.position - lfWheel.transform.position).magnitude;
         float length = (rfWheel.transform.position - rrWheel.transform.position).magnitude;
@@ -46,8 +44,8 @@ public class RemotePP : MonoBehaviour {
         // T = (V-w/Kv)*Kt/R
         float volts_abs = Math.Abs(volts);
         float rpm = Math.Abs(wheel.rpm / gearing);
-        float back_emf = Math.Min(rpm / Kv, volts_abs);
-        float torque_abs = (volts_abs - back_emf) * Kt / R;
+        float back_emf = Math.Min(rpm / motor.Kv, volts_abs);
+        float torque_abs = (volts_abs - back_emf) * motor.Kt / motor.Resistance;
         float torque = Math.Sign(volts) * torque_abs / gearing;
         return torque;
     }

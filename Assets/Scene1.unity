@@ -289,7 +289,7 @@ WheelCollider:
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
   m_Mass: 50
-  m_WheelDampingRate: 1
+  m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -488,7 +488,7 @@ WheelCollider:
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
   m_Mass: 50
-  m_WheelDampingRate: 1
+  m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -665,9 +665,6 @@ MonoBehaviour:
   maxWheelSpeed: 270
   maxMotorSpeed: 18700
   maxBrakeTorque: 10
-  Kv: 1570.05
-  Kt: 0.0053
-  R: 0.0896
 --- !u!114 &1788497332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -686,9 +683,6 @@ MonoBehaviour:
   maxWheelSpeed: 270
   maxMotorSpeed: 18700
   maxBrakeTorque: 10
-  Kv: 1570.05
-  Kt: 0.0053
-  R: 0.0896
 --- !u!114 &1788497333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -705,11 +699,7 @@ MonoBehaviour:
   lrWheel: {fileID: 1917906336}
   rrWheel: {fileID: 2007736311}
   maxWheelSpeed: 270
-  maxMotorSpeed: 18700
   maxBrakeTorque: 80
-  Kv: 1570.05
-  Kt: 0.0053
-  R: 0.0896
 --- !u!1 &1917906332
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,7 +789,7 @@ WheelCollider:
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
   m_Mass: 50
-  m_WheelDampingRate: 1
+  m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
@@ -890,7 +880,7 @@ WheelCollider:
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
   m_Mass: 50
-  m_WheelDampingRate: 1
+  m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
     m_ExtremumValue: 1
