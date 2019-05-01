@@ -73,6 +73,7 @@ public class RemotePP : MonoBehaviour {
 
     private void SetWheel(WheelCollider wheel, float power, float angle)
     {
+        angle = angle % 360f;
         if (power != 0)
         {
             float volts = power * 12f;

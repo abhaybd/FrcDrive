@@ -16,7 +16,7 @@ public class RemoteSwerve : MonoBehaviour
     public float maxWheelSpeed;
     public float maxBrakeTorque;
 
-    private DCMotor motor = new Vex775Pro();
+    private DCMotor motor = new Neo();
 
     private Encoder lfEncoder;
     private Encoder rfEncoder;
@@ -78,6 +78,7 @@ public class RemoteSwerve : MonoBehaviour
 
     private void SetWheel(WheelCollider wheel, float power, float angle)
     {
+        angle = angle % 360f;
         if (power != 0)
         {
             float volts = power * 12f;
@@ -107,8 +108,8 @@ public class RemoteSwerve : MonoBehaviour
             RPC.Instance.ExecuteMethod<object>(remoteGyroName, "setHeading", new string[] { "java.lang.Double" }, new object[] { heading });
 
             status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus",
-                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
-                new object[] { x, y, turn, lfEncoder.GetTangentialVelocity(), rfEncoder.GetTangentialVelocity(), lrEncoder.GetTangentialVelocity(), rrEncoder.GetTangentialVelocity() });
+                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double" },
+                new object[] { x, y, turn });
             yield return new WaitForSeconds(0.01f);
         }
     }
@@ -120,6 +121,5 @@ public class RemoteSwerve : MonoBehaviour
         public float rfPower, rfAngle;
         public float lrPower, lrAngle;
         public float rrPower, rrAngle;
-        public float x, y, heading;
     }
 }
