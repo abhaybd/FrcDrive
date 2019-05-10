@@ -110,6 +110,10 @@ public class RemoteSwerve : MonoBehaviour
             status = RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "getStatus",
                 new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double" },
                 new object[] { x, y, turn });
+
+            RPC.Instance.ExecuteMethod<SwerveStatus>(objectName, "updateOdometry",
+                new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double", "java.lang.Double" },
+                new object[] { lfEncoder.GetTangentialVelocity(), rfEncoder.GetTangentialVelocity(), lrEncoder.GetTangentialVelocity(), rrEncoder.GetTangentialVelocity() });
             yield return new WaitForSeconds(0.01f);
         }
     }
