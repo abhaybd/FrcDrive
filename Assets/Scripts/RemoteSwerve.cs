@@ -18,6 +18,8 @@ public class RemoteSwerve : MonoBehaviour
 
     private DCMotor motor = new Neo();
 
+    private Rigidbody rb;
+
     private Encoder lfEncoder;
     private Encoder rfEncoder;
     private Encoder rrEncoder;
@@ -28,6 +30,8 @@ public class RemoteSwerve : MonoBehaviour
     private SwerveStatus status = new SwerveStatus();
     private float gearing;
 
+    private Vector3[,] rays = new Vector3[4,2];
+
     // Use this for initialization
     void Start()
     {
@@ -36,10 +40,14 @@ public class RemoteSwerve : MonoBehaviour
         rrEncoder = rrWheel.GetComponent<Encoder>();
         lrEncoder = lrWheel.GetComponent<Encoder>();
 
+        rb = GetComponent<Rigidbody>();
+
         gearing = maxWheelSpeed / motor.FreeSpeed; // output over input
         Debug.Log("Gearing: " + gearing);
         float width = (rfWheel.transform.position - lfWheel.transform.position).magnitude;
         float length = (rfWheel.transform.position - rrWheel.transform.position).magnitude;
+        Debug.Log(rfWheel.transform.position + ", " + lfWheel.transform.position);
+        Debug.Log(rfWheel.transform.position + ", " + rrWheel.transform.position);
         RPC.Instance.InstantiateObject<object>(GyroObjName, remoteGyroName, new string[] { "java.lang.String" }, new object[] { "MockGyro" });
         object obj = RPC.Instance.InstantiateObject<object>(RemoteSwerveObjName, objectName,
             new string[] { "java.lang.Double", "java.lang.Double", "REMOTE:trclib.TrcGyro" },
@@ -68,7 +76,38 @@ public class RemoteSwerve : MonoBehaviour
         SetWheel(lrWheel, status.lrPower, status.lrAngle);
         SetWheel(rrWheel, status.rrPower, status.rrAngle);
 
-        //Debug.LogFormat("X={0},Y={1},heading={2}", status.x, status.y, status.heading);
+
+        DrawWheelVecs(lfWheel, status.lfPower, 0);
+        DrawWheelVecs(rfWheel, status.rfPower, 1);
+        DrawWheelVecs(lrWheel, status.lrPower, 2);
+        DrawWheelVecs(rrWheel, status.rrPower, 3);
+
+        Vector3 vel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        Debug.DrawRay(transform.position, vel, Color.green);
+    }
+
+    private void DrawWheelVecs(WheelCollider wheel, float power, int index)
+    {
+        if (Input.anyKey)
+        {
+            Vector3 tangent = Vector3.Cross(wheel.transform.parent.position - wheel.transform.position, Vector3.up);
+            float omega = rb.angularVelocity.y;
+            tangent *= omega;
+            Vector3 vel = tangent + rb.velocity;
+            vel.y = 0f;
+            Debug.DrawRay(wheel.transform.position, vel, Color.red);
+
+            Vector3 steerVec = new Vector3(Mathf.Sin(wheel.transform.eulerAngles.y * Mathf.Deg2Rad), 0f, Mathf.Cos(wheel.transform.eulerAngles.y * Mathf.Deg2Rad));
+            steerVec *= wheel.gameObject.GetComponent<Encoder>().GetTangentialVelocity();
+            Debug.DrawRay(wheel.transform.position, steerVec, Color.cyan);
+            rays[index, 0] = vel;
+            rays[index, 1] = steerVec;
+        }
+        else
+        {
+            Debug.DrawRay(wheel.transform.position, rays[index,0], Color.red);
+            Debug.DrawRay(wheel.transform.position, rays[index,1], Color.cyan);
+        }
     }
 
     void OnDestroy()
@@ -102,7 +141,7 @@ public class RemoteSwerve : MonoBehaviour
         {
             float x = Input.GetAxis("Horizontal");
             float y = Input.GetAxis("Vertical");
-            float turn = Input.GetAxis("Turn");
+            float turn = Input.GetAxis("Turn") / 2f;
             float heading = transform.eulerAngles.y;
 
             RPC.Instance.ExecuteMethod<object>(remoteGyroName, "setHeading", new string[] { "java.lang.Double" }, new object[] { heading });
