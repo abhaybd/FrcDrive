@@ -35,15 +35,14 @@ public class RemotePID : MonoBehaviour {
         StartCoroutine(CallRemote());
     }
 
-    private float GetTorque(WheelCollider wheel, float volts)
+    private float GetTorque(WheelCollider wheel, DCMotor motor, float percentOut)
     {
-        // V = (T/Kt)*R + w/Kv
-        // T = (V-w/Kv)*Kt/R
-        float volts_abs = Math.Abs(volts);
-        float rpm = Math.Abs(wheel.rpm / gearing);
-        float back_emf = Math.Min(rpm / motor.Kv, volts_abs);
-        float torque_abs = (volts_abs - back_emf) * motor.Kt / motor.Resistance;
-        float torque = Math.Sign(volts) * torque_abs / gearing;
+        // torque = stallTorque * (percentVolts - percentVel)
+        percentOut = Mathf.Clamp(percentOut, -1, 1);
+        float percentVel = wheel.rpm / maxWheelSpeed;
+        float percentTorque = (percentOut - wheel.rpm / maxWheelSpeed);
+        float torque = percentTorque * motor.StallTorque / gearing;
+        Debug.Log("out: " + percentOut + ", vel: " + percentVel + ", torque: " + percentTorque);
         return torque;
     }
 
@@ -60,7 +59,7 @@ public class RemotePID : MonoBehaviour {
             started = true;
             RPC.Instance.ExecuteMethod<object>(objectName, "drive",
                 new string[] { "java.lang.Double", "java.lang.Double", "java.lang.Double" },
-                new object[] { 4, 4, 0 });
+                new object[] { 0,0,90 });
         }
 
         //Debug.LogFormat("X={0},Y={1},heading={2}", status.x, status.y, status.heading);
@@ -73,17 +72,7 @@ public class RemotePID : MonoBehaviour {
 
     private void SetWheel(WheelCollider wheel, float power, float angle)
     {
-        if (power != 0)
-        {
-            float volts = power * 12f;
-            wheel.motorTorque = GetTorque(wheel, volts);
-            wheel.brakeTorque = 0;
-        }
-        else
-        {
-            wheel.motorTorque = 0;
-            wheel.brakeTorque = maxBrakeTorque;
-        }
+        wheel.motorTorque = GetTorque(wheel, motor, power);
         wheel.steerAngle = angle;
         Vector3 rot = wheel.transform.localEulerAngles;
         Vector3 targetRot = new Vector3(rot.x, wheel.steerAngle, rot.z);

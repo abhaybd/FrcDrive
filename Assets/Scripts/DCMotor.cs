@@ -8,6 +8,7 @@ public class DCMotor {
     public float Voltage { get; private set; }
     public float Resistance { get; private set; }
     public float FreeSpeed { get; private set; }
+    public float StallTorque { get; private set; }
 
     public DCMotor(float voltage, float freeSpeed, float freeCurrent, float stallTorque, float stallCurrent)
     {
@@ -16,5 +17,6 @@ public class DCMotor {
         Resistance = voltage / stallCurrent;
         Kt = stallTorque / stallCurrent;
         Kv = freeSpeed / (voltage - freeCurrent * Resistance);
+        StallTorque = stallTorque;
     }
 }
